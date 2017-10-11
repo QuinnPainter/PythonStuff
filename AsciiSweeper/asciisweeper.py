@@ -6,7 +6,7 @@ size = 9
 diff = 25
 seenboard = []
 mineboard = []
-pretty = False
+pretty = True
 
 def genBoard():
     for y in xrange(size):
@@ -36,6 +36,28 @@ def showBoard():
     else:
         for r in xrange(size):
             print seenboard[r]
+def gameLoop():
+    action = getInput()
+def getInput():
+    input = raw_input().lower() #case insensitive
+    command = input[:4] #the command is always the first 4 letters: help, exit, flag, bomb
+    details = input[4:]
+    if command == "help":
+        print "Type 'bomb' and coordinates of bomb to trigger, in format 'x, y'"
+        print "example: bomb 5, 7"
+        print "Type 'flag' before coordinates to flag those coordinates"
+        print "example: flag 5, 6"
+        print "Type 'exit' to exit"
+        return getInput()
+    elif command == "exit":
+        sys.exit()
+    elif command == "bomb":
+        print("todo")
+    elif command == "flag":
+        print("todo")
+    else:
+        print "Invalid input. Type 'help' for command help."
+        return getInput()
 if (len(sys.argv) != 3):
     print ("Incorrect arguments")
     print ("First arg is size, second is difficulty")
@@ -44,4 +66,5 @@ size = int(sys.argv[1])
 diff = int(sys.argv[2])
 genBoard()
 showBoard()
-print "Generated new board"
+print "Generated new board. Type 'help' for help."
+gameLoop()

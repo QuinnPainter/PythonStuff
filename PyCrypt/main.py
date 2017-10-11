@@ -11,7 +11,7 @@ triedMethods = {}
 
 def doNothing(code):
     #Who knows, maybe easier than expected?
-    triedMethods["Do nothing"] = [code, checkEnglish(code)]
+    triedMethods["Doing nothing"] = [code, checkEnglish(code)]
 def binary(code):
     bin = parseDefinitionLines(readDefinitionLines(binaryFile))
     formattedCode = ""
@@ -58,7 +58,7 @@ def parseDefinitionLines(lines):
     for line in lines:
         definitions[line[2:]] = line[0]
     return definitions
-def checkEnglish(string, hardCheck = False):
+def checkEnglish(string, hardCheck = True):
     #hardCheck=true loops through dictionary, finding words in sentence
     #hardCheck=false loops through sentence, requires spacing
     englishWordCount = 0
@@ -73,12 +73,18 @@ def checkEnglish(string, hardCheck = False):
             if(word in dictionary):
                 englishWordCount += 1
     return englishWordCount
-#def findBestMethod()
-#    currentBest = ""
-#    for method in triedMethods:
-#	    if method[1] >
+def getBestSolution():
+    currentBest = ["", "", -1]
+    for key, value in triedMethods.iteritems():
+        if value[1] > currentBest[2]:
+            currentBest[0] = key
+            currentBest[1] = value[0]
+            currentBest[2] = value[1]
+    print currentBest[0] + " is the best solution, with " + str(currentBest[2]) + " words"
+    print currentBest[1]
 dictionary = set(readDefinitionLines(wordlistFile))
 lengthSortedDictionary = sorted(list(dictionary), key=len)[::-1]#[::-1] reverses the list
 
 allMethods(input)
-print triedMethods
+#print triedMethods
+getBestSolution()
