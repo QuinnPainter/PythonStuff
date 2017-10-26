@@ -10,7 +10,7 @@ mineboard = []
 groundchar = "O"
 minechar = "M"
 flagchar = "F"
-groundcolour = colorama.Fore.GREEN
+groundcolour = colorama.Fore.GREEN# + colorama.Back.GREEN
 minecolour = colorama.Fore.YELLOW
 flagcolour = colorama.Fore.RED
 pretty = True
@@ -19,8 +19,17 @@ def genBoard():
     for y in xrange(size):
         mineboard.append(groundchar * size)
         seenboard.append(groundchar * size)
+    availableMinePositions = []
+    for y in xrange(size):
+        for x in xrange(size):
+            availableMinePositions.append(str(x) + str(y))
     for d in xrange(diff):
-        minepos = [random.randint(0, size - 1), random.randint(0, size - 1)]
+        mineposInList = random.randint(0, len(availableMinePositions) - 1)
+        minepos = [-1, -1]
+        minepos[0] = int(availableMinePositions[mineposInList][0])
+        minepos[1] = int(availableMinePositions[mineposInList][1])
+        del availableMinePositions[mineposInList]
+        #minepos = [random.randint(0, size - 1), random.randint(0, size - 1)]
         mineboard[minepos[0]] = mineboard[minepos[0]][:minepos[1]] + minechar + mineboard[minepos[0]][minepos[1] + 1:]
 def showBoard():
     if (pretty == True):
@@ -34,7 +43,7 @@ def showBoard():
         for r in xrange(size):
             number = numbers[::-1][r]
             printrow = ""
-            for c in seenboard[r]:
+            for c in seenboard[r]: #Replace with "mineboard" to see the mines for debugging
                 if c == groundchar:
                     printrow += groundcolour + c
                 elif c == minechar:
@@ -59,7 +68,14 @@ def gameLoop():
         l[action[1] - 1] = flagchar
         seenboard[size - action[2]] = "".join(l) #...and convert it back to string
         showBoard()
+    elif action[0] == "dig":
+        print mineboard[size - action[2]][action[1]]
+        if mineboard[size - action[2]][action[1]] == minechar:
+            lose(action[1], action[2])
     gameLoop()
+def lose(bombx, bomby):
+    print "You lose" #todo
+    sys.exit()
 def getInput():
     input = raw_input().lower() #case insensitive
     command = input[:4] #the command is always the first 4 letters: help, exit, flag
@@ -87,7 +103,7 @@ def getInput():
         if x == -998:
             print "Coordinates too small or too large. Type 'help' for command help."
             return getInput()
-        return ["bomb", x, y]
+        return ["dig", x, y]
     else:
         print "Invalid input. Type 'help' for command help."
         return getInput()
@@ -103,7 +119,7 @@ def cleanCoordinates(s):
     return [x, y]
 if (len(sys.argv) != 3):
     print ("Incorrect arguments")
-    print ("First arg is size, second is difficulty")
+    print ("First arg is size, second is difficulty (number of mines)")
     exit()
 size = int(sys.argv[1])
 diff = int(sys.argv[2])
