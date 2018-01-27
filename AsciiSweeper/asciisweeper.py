@@ -116,6 +116,8 @@ def showBoard():
                     printrow += minecolour + c
                 elif c == flagchar:
                     printrow += flagcolour + c
+                else:
+                    printrow += numcolour + c
             if (number < 10):
                 print str(number) + "  " + printrow
             else:
@@ -149,11 +151,16 @@ def setCharAtPosition(x, y, char):
     l[x - 1] = char
     seenboard[size - y] = "".join(l) #...and convert it back to string
 def reveal(x, y):
+    #if not seenboard[size - y][x - 1] == groundchar:
+     #   return
     revealOneTile(x, y)
     if mineboard[size - y][x - 1] == " ":
         nearTiles = NearbyTileCoords(x, y)
         for tile in nearTiles:
-            reveal(tile[1], tile[0])
+            #print str(seenboard[size - tile[1]][tile[0] - 1])
+            if seenboard[size - tile[0]][tile[1] - 1] == groundchar:
+                #pass
+                reveal(tile[1], tile[0])
     else: #Must be a number
         pass #No need to do anything here yet
 def revealOneTile(x, y):
@@ -217,7 +224,7 @@ def NearbyTileCoords(x, y):
             relativeCoords.append([1, 1])
     for c in relativeCoords:
         worldCoords.append([y + c[1], x + c[0]])
-    print worldCoords
+    #print worldCoords
     return worldCoords
 def getInput():
     input = raw_input().lower() #case insensitive
@@ -264,6 +271,7 @@ if (len(sys.argv) != 4 or sys.argv[1] == "help"):
     #print ("Incorrect arguments")
     print ("First arg is size, second is difficulty (number of mines)")
     print ("Third argument is to present with colour and numbers, True or False")
+    print ("Example - python asciisweeper.py 5 5 True")
     exit()
 size = int(sys.argv[1])
 diff = int(sys.argv[2])
@@ -274,6 +282,7 @@ if pretty == "True":
     groundcolour = colorama.Fore.GREEN# + colorama.Back.GREEN
     minecolour = colorama.Fore.YELLOW
     flagcolour = colorama.Fore.RED
+    numcolour = colorama.Fore.YELLOW
     pretty = True
 elif pretty == "False":
     pretty = False

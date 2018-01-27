@@ -1,1 +1,4 @@
 Look up alternate characters to use in "ugly" mode e.g. block character
+win conditions
+grid
+change recursive reveal maybe?
