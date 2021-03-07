@@ -12,14 +12,14 @@ flagchar = "F"
 pretty = True
 
 def genBoard():
-    for y in xrange(size):
+    for y in range(size):
         mineboard.append(" " * size)
         seenboard.append(groundchar * size)
     availableMinePositions = []
-    for y in xrange(size):
-        for x in xrange(size):
+    for y in range(size):
+        for x in range(size):
             availableMinePositions.append(str(x) + str(y))
-    for d in xrange(diff):
+    for d in range(diff):
         mineposInList = random.randint(0, len(availableMinePositions) - 1)
         minepos = [-1, -1]
         minepos[0] = int(availableMinePositions[mineposInList][0])
@@ -101,12 +101,12 @@ def showBoard():
     if (pretty == True):
         numbers = range(1, size + 1)
         numberrow2 = []
-        for i in xrange(len(numbers)):
+        for i in range(len(numbers)):
             if (numbers[i] > 9):
                 numberrow2.append(str(numbers[i])[1])
             else:
                 numberrow2.append(" ")
-        for r in xrange(size):
+        for r in range(size):
             number = numbers[::-1][r]
             printrow = ""
             for c in seenboard[r]: #Replace with "mineboard" to see the mines for debugging
@@ -119,17 +119,17 @@ def showBoard():
                 else:
                     printrow += numcolour + c
             if (number < 10):
-                print str(number) + "  " + printrow
+                print(str(number) + "  " + printrow)
             else:
-                print str(number) + " " + printrow
-        print ""
-        print "   " + "".join(str(e)[0] for e in numbers)
-        print "   " + "".join(numberrow2)
+                print(str(number) + " " + printrow)
+        print("")
+        print("   " + "".join(str(e)[0] for e in numbers))
+        print("   " + "".join(numberrow2))
     else:
-        for r in xrange(size):
-            print mineboard[r]
-        for r in xrange(size):
-            print seenboard[r]
+        #for r in range(size):
+            #print(mineboard[r])
+        for r in range(size):
+            print(seenboard[r])
 def gameLoop():
     global seenboard
     action = getInput()
@@ -137,14 +137,14 @@ def gameLoop():
         setCharAtPosition(action[1], action[2], flagchar)
         showBoard()
     elif action[0] == "dig":
-        #print mineboard[size - action[2]][action[1]]
+        #print (mineboard[size - action[2]][action[1]])
         if mineboard[size - action[2]][action[1] - 1] == minechar:
             lose(action[1], action[2])
         reveal(action[1], action[2])
         showBoard()
     gameLoop()
 def lose(bombx, bomby):
-    print "You lose" #todo
+    print ("You lose") #todo
     sys.exit()
 def setCharAtPosition(x, y, char):
     l = list(seenboard[size - y]) #Convert selected row to list so we can assign a single character, also reverse it so input goes from bottom left instead of top left
@@ -224,38 +224,38 @@ def NearbyTileCoords(x, y):
             relativeCoords.append([1, 1])
     for c in relativeCoords:
         worldCoords.append([y + c[1], x + c[0]])
-    #print worldCoords
+    #print (worldCoords)
     return worldCoords
 def getInput():
-    input = raw_input().lower() #case insensitive
-    command = input[:4] #the command is always the first 4 letters: help, exit, flag
-    details = input[4:]
+    cmdInput = input().lower() #case insensitive
+    command = cmdInput[:4] #the command is always the first 4 letters: help, exit, flag
+    details = cmdInput[4:]
     if command == "help":
-        print "Type coordinates, in format 'x, y', to dig a tile"
-        print "example: 5, 7"
-        print "Type 'flag' before coordinates to flag those coordinates"
-        print "example: flag 5, 6"
-        print "Type 'exit' to exit"
+        print ("Type coordinates, in format 'x, y', to dig a tile")
+        print ("example: 5, 7")
+        print ("Type 'flag' before coordinates to flag those coordinates")
+        print ("example: flag 5, 6")
+        print ("Type 'exit' to exit")
         return getInput()
     elif command == "exit":
         sys.exit()
     elif command == "flag":
         x, y = cleanCoordinates(details)
         if x == -999:
-            print "Invalid input. Type 'help' for command help."
+            print ("Invalid input. Type 'help' for command help.")
             return getInput()
         elif x == -998:
-            print "Coordinates too small or too large. Type 'help' for command help."
+            print ("Coordinates too small or too large. Type 'help' for command help.")
             return getInput()
         return ["flag", x, y]
-    elif not cleanCoordinates(input)[0] == -999:
-        x, y = cleanCoordinates(input)
+    elif not cleanCoordinates(cmdInput)[0] == -999:
+        x, y = cleanCoordinates(cmdInput)
         if x == -998:
-            print "Coordinates too small or too large. Type 'help' for command help."
+            print ("Coordinates too small or too large. Type 'help' for command help.")
             return getInput()
         return ["dig", x, y]
     else:
-        print "Invalid input. Type 'help' for command help."
+        print ("Invalid input. Type 'help' for command help.")
         return getInput()
 def cleanCoordinates(s):
     try:
@@ -290,5 +290,5 @@ else:
     print ("Third argument must be True or False")
 genBoard()
 showBoard()
-print "Generated new board. Type 'help' for help."
+print ("Generated new board. Type 'help' for help.")
 gameLoop()
